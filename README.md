@@ -33,7 +33,7 @@ The source describes the vaccine index as a simple average of tracer vaccines in
 ## Run the project
 
 1. Extract the ZIP while retaining its folders.
-2. Open `FASTR_Nigeria_expanded.do` in Stata 19's Do-file Editor.
+2. Open `FASTR_Nigeria.do` in Stata 19's Do-file Editor.
 3. Edit the `local project_root` line to point to the extracted project folder. The supplied path records the location used for the successful run.
 4. Keep the source workbook at `data/FASTR-Data.xlsx` and preserve its sheet names and layout.
 5. Run the whole do-file. It uses built-in commands and needs no additional packages.
@@ -43,7 +43,7 @@ This is a standalone do-file and does not require any previous script. It uses `
 
 ## Files
 
-- `FASTR_Nigeria_expanded.do`: complete analysis code.
+- `FASTR_Nigeria.do`: complete analysis code.
 - `data/FASTR-Data.xlsx`: unchanged source workbook.
 - `outputs/readiness_national_table.csv`: three national indicator rows.
 - `outputs/readiness_zone_table.csv`: eighteen zone-indicator rows.
