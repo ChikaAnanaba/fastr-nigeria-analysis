@@ -1,0 +1,19 @@
+indicator_id,group_id,availability_pct,zone,survey_sample_n,source_indicator,indicator_code,indicator_label,country_round,survey_period
+1,1,68.36478114128113,North-Central,720,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+1,2,69.54874992370605,North-East,518,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+1,3,75.78310370445251,North-West,869,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+1,4,81.11342787742615,South-East,610,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+1,5,74.33810234069824,South-South,572,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+1,6,70.12544274330139,South-West,700,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+2,1,56.55866861343384,North-Central,720,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+2,2,48.16981256008148,North-East,518,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+2,3,42.55536794662476,North-West,869,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+2,4,68.87116432189941,South-East,610,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+2,5,59.91014242172241,South-South,572,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+2,6,70.38174867630005,South-West,700,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+3,1,26.97827517986298,North-Central,720,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025
+3,2,18.85801553726196,North-East,518,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025
+3,3,24.80622529983521,North-West,869,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025
+3,4,23.99374842643738,South-East,610,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025
+3,5,18.22027266025543,South-South,572,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025
+3,6,32.30915069580078,South-West,700,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025

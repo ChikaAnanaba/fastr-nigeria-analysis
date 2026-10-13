@@ -1,0 +1,7 @@
+indicator_id,group_id,availability_pct,programme_group,survey_sample_n,source_indicator,indicator_code,indicator_label,country_round,survey_period
+1,1,67.43269562721252,Non-BHCPF,828,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+1,2,82.56410956382751,BHCPF,3161,Average percentage of key vaccines available at the facility,SUP_05AAA_*,Average key vaccine availability,NG_R1,May-July 2025
+2,1,43.64099204540253,Non-BHCPF,828,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+2,2,81.63538575172424,BHCPF,3161,Percent of facilities that report a primary source of electricity,INF_04,Primary electricity source,NG_R1,May-July 2025
+3,1,18.63835155963898,Non-BHCPF,828,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025
+3,2,36.56346499919891,BHCPF,3161,Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,Continuous electricity in past 7 days,NG_R1,May-July 2025

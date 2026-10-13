@@ -1,0 +1,4 @@
+source_indicator,indicator_code,availability_pct,indicator_id,indicator_label,survey_sample_n,country_round,survey_period
+Average percentage of key vaccines available at the facility,SUP_05AAA_*,72.31801152229309,1,Average key vaccine availability,3989,NG_R1,May-July 2025
+Percent of facilities that report a primary source of electricity,INF_04,55.90783953666687,2,Primary electricity source,3989,NG_R1,May-July 2025
+Percent of facilities that report continuous access to a source of electricity in the seven days preceding the survey,INF_05,24.43369030952454,3,Continuous electricity in past 7 days,3989,NG_R1,May-July 2025

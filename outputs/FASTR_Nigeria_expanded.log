@@ -1,0 +1,581 @@
+----------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\nwoke\OneDrive\Documents\FASTR_Nigeria\outputs/FASTR_Nigeria_expanded.log
+  log type:  text
+ opened on:  13 Oct 2026, 21:14:57
+
+. 
+. * Indicator IDs: 1 vaccine average; 2 electricity source; 3 continuity.
+. * Different indicator meanings must be retained even though all use 0-100.
+. tempfile national zones programme
+
+. 
+. * ---------- National summaries ----------
+. import excel using "data/FASTR-Data.xlsx", ///
+>     sheet("Final selected indicators") allstring clear
+(28 vars, 37 obs)
+
+. assert strtrim(Z[1]) == "NG_R1"
+
+. generate long source_row = _n
+
+. quietly count if strtrim(C) == "N"
+
+. assert r(N) == 1
+
+. quietly summarize source_row if strtrim(C) == "N", meanonly
+
+. local sample_row = r(min)
+
+. scalar national_sample = real(Z[`sample_row'])
+
+. assert scalar(national_sample) == 3989
+
+. quietly count if strtrim(B) == "data collection range"
+
+. assert r(N) == 1
+
+. quietly summarize source_row if strtrim(B) == "data collection range", meanonly
+
+. local period_row = r(min)
+
+. assert strtrim(Z[`period_row']) == "May-July 2025"
+
+. 
+. generate byte indicator_id = .
+(37 missing values generated)
+
+. replace indicator_id = 1 if strtrim(C) == "SUP_05AAA_*"
+(1 real change made)
+
+. replace indicator_id = 2 if strtrim(C) == "INF_04"
+(1 real change made)
+
+. replace indicator_id = 3 if strtrim(C) == "INF_05"
+(1 real change made)
+
+. keep if !missing(indicator_id)
+(34 observations deleted)
+
+. assert _N == 3
+
+. isid indicator_id
+
+. rename C indicator_code
+
+. rename B source_indicator
+
+. rename Z availability_pct
+
+. keep indicator_id indicator_code source_indicator availability_pct
+
+. replace indicator_code = strtrim(indicator_code)
+(0 real changes made)
+
+. replace source_indicator = strtrim(source_indicator)
+(1 real change made)
+
+. destring availability_pct, replace
+availability_pct: all characters numeric; replaced as double
+
+. assert !missing(availability_pct)
+
+. assert inrange(availability_pct, 0, 100)
+
+. generate str36 indicator_label = ""
+(3 missing values generated)
+
+. replace indicator_label = "Average key vaccine availability" if indicator_id == 1
+(1 real change made)
+
+. replace indicator_label = "Primary electricity source" if indicator_id == 2
+(1 real change made)
+
+. replace indicator_label = "Continuous electricity in past 7 days" if indicator_id == 3
+variable indicator_label was str36 now str37
+(1 real change made)
+
+. generate long survey_sample_n = scalar(national_sample)
+
+. generate str8 country_round = "NG_R1"
+
+. generate str20 survey_period = "May-July 2025"
+
+. format availability_pct %9.2f
+
+. sort indicator_id
+
+. save `national'
+file C:\Users\nwoke\AppData\Local\Temp\ST_74c4_000001.tmp saved as .dta format
+
+. save "outputs/readiness_national_summary.dta", replace
+(file outputs/readiness_national_summary.dta not found)
+file outputs/readiness_national_summary.dta saved
+
+. export delimited using "outputs/readiness_national_table.csv", replace
+(file outputs/readiness_national_table.csv not found)
+file outputs/readiness_national_table.csv saved
+
+. list indicator_label availability_pct survey_sample_n, noobs
+
+  +-------------------------------------------------------------+
+  |                       indicator_label   availa~t   survey~n |
+  |-------------------------------------------------------------|
+  |      Average key vaccine availability      72.32       3989 |
+  |            Primary electricity source      55.91       3989 |
+  | Continuous electricity in past 7 days      24.43       3989 |
+  +-------------------------------------------------------------+
+
+. 
+. graph hbar (asis) availability_pct, ///
+>     over(indicator_label, sort(indicator_id)) ///
+>     blabel(bar, format(%4.2f)) ylabel(0(20)100) ///
+>     ytitle("Published indicator value (%)") ///
+>     title("Nigeria: vaccine availability and electricity") ///
+>     note("Source: GFF FASTR published summaries, Nigeria Round 1, May-July 2025." ///
+>          "Vaccine average and facility percentages measure different things.")
+
+. graph export "outputs/readiness_national.png", width(1800) replace
+(file outputs/readiness_national.png not found)
+file outputs/readiness_national.png saved as PNG format
+
+. graph save "outputs/readiness_national.gph", replace
+(file outputs/readiness_national.gph not found)
+file outputs/readiness_national.gph saved
+
+. 
+. * ---------- Zone summaries ----------
+. import excel using "data/FASTR-Data.xlsx", ///
+>     sheet("by city or region") allstring clear
+(105 vars, 39 obs)
+
+. assert strtrim(CT[1]) == "NG_R1"
+
+. assert strtrim(CT[4]) == "North-Central"
+
+. assert strtrim(CU[4]) == "North-East"
+
+. assert strtrim(CV[4]) == "North-West"
+
+. assert strtrim(CW[4]) == "South-East"
+
+. assert strtrim(CX[4]) == "South-South"
+
+. assert strtrim(CY[4]) == "South-West"
+
+. generate long source_row = _n
+
+. quietly count if strtrim(B) == "Sample"
+
+. assert r(N) == 1
+
+. quietly summarize source_row if strtrim(B) == "Sample", meanonly
+
+. local sample_row = r(min)
+
+. local j = 0
+
+. foreach col in CT CU CV CW CX CY {
+  2.     local ++j
+  3.     local sample`j' = real(`col'[`sample_row'])
+  4. }
+
+. generate byte indicator_id = .
+(39 missing values generated)
+
+. replace indicator_id = 1 if strtrim(C) == "SUP_05AAA_*"
+(1 real change made)
+
+. replace indicator_id = 2 if strtrim(C) == "INF_04"
+(1 real change made)
+
+. replace indicator_id = 3 if strtrim(C) == "INF_05"
+(1 real change made)
+
+. keep if !missing(indicator_id)
+(36 observations deleted)
+
+. assert _N == 3
+
+. isid indicator_id
+
+. keep indicator_id CT CU CV CW CX CY
+
+. rename (CT CU CV CW CX CY) (value1 value2 value3 value4 value5 value6)
+
+. reshape long value, i(indicator_id) j(group_id)
+(j = 1 2 3 4 5 6)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations                3   ->   18          
+Number of variables                   7   ->   3           
+j variable (6 values)                     ->   group_id
+xij variables:
+               value1 value2 ... value6   ->   value
+-----------------------------------------------------------------------------
+
+. rename value availability_pct
+
+. destring availability_pct, replace
+availability_pct: all characters numeric; replaced as double
+
+. generate str20 zone = ""
+(18 missing values generated)
+
+. replace zone = "North-Central" if group_id == 1
+(3 real changes made)
+
+. replace zone = "North-East" if group_id == 2
+(3 real changes made)
+
+. replace zone = "North-West" if group_id == 3
+(3 real changes made)
+
+. replace zone = "South-East" if group_id == 4
+(3 real changes made)
+
+. replace zone = "South-South" if group_id == 5
+(3 real changes made)
+
+. replace zone = "South-West" if group_id == 6
+(3 real changes made)
+
+. generate long survey_sample_n = .
+(18 missing values generated)
+
+. forvalues j = 1/6 {
+  2.     replace survey_sample_n = `sample`j'' if group_id == `j'
+  3. }
+(3 real changes made)
+(3 real changes made)
+(3 real changes made)
+(3 real changes made)
+(3 real changes made)
+(3 real changes made)
+
+. assert _N == 18
+
+. isid indicator_id zone
+
+. assert !missing(availability_pct, survey_sample_n)
+
+. assert inrange(availability_pct, 0, 100)
+
+. assert survey_sample_n > 0 & survey_sample_n == floor(survey_sample_n)
+
+. bysort indicator_id: egen total_sample = total(survey_sample_n)
+
+. assert total_sample == scalar(national_sample)
+
+. drop total_sample
+
+. merge m:1 indicator_id using `national', ///
+>     keepusing(indicator_code indicator_label source_indicator country_round survey_period) ///
+>     assert(match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                18  
+    -----------------------------------------
+
+. format availability_pct %9.2f
+
+. sort indicator_id group_id
+
+. save `zones'
+file C:\Users\nwoke\AppData\Local\Temp\ST_74c4_000002.tmp saved as .dta format
+
+. save "outputs/readiness_zone_summary.dta", replace
+(file outputs/readiness_zone_summary.dta not found)
+file outputs/readiness_zone_summary.dta saved
+
+. export delimited using "outputs/readiness_zone_table.csv", replace
+(file outputs/readiness_zone_table.csv not found)
+file outputs/readiness_zone_table.csv saved
+
+. 
+. forvalues k = 1/3 {
+  2.     preserve
+  3.     keep if indicator_id == `k'
+  4.     local label = indicator_label[1]
+  5.     graph hbar (asis) availability_pct, ///
+>         over(zone, sort(1) descending) ///
+>         blabel(bar, format(%4.2f)) ylabel(0(20)100) ///
+>         ytitle("Published indicator value (%)") ///
+>         title("Nigeria: `label' by zone", size(medsmall)) ///
+>         note("Source: GFF FASTR published summaries, Nigeria Round 1." ///
+>              "Separate group summaries; not facility-level associations.")
+  6.     graph export "outputs/readiness_zone_indicator`k'.png", width(1800) replace
+  7.     graph save "outputs/readiness_zone_indicator`k'.gph", replace
+  8.     restore
+  9. }
+(12 observations deleted)
+(file outputs/readiness_zone_indicator1.png not found)
+file outputs/readiness_zone_indicator1.png saved as PNG format
+(file outputs/readiness_zone_indicator1.gph not found)
+file outputs/readiness_zone_indicator1.gph saved
+(12 observations deleted)
+(file outputs/readiness_zone_indicator2.png not found)
+file outputs/readiness_zone_indicator2.png saved as PNG format
+(file outputs/readiness_zone_indicator2.gph not found)
+file outputs/readiness_zone_indicator2.gph saved
+(12 observations deleted)
+(file outputs/readiness_zone_indicator3.png not found)
+file outputs/readiness_zone_indicator3.png saved as PNG format
+(file outputs/readiness_zone_indicator3.gph not found)
+file outputs/readiness_zone_indicator3.gph saved
+
+. 
+. * ---------- BHCPF programme groups ----------
+. import excel using "data/FASTR-Data.xlsx", ///
+>     sheet("by facility type") allstring clear
+(51 vars, 38 obs)
+
+. assert strtrim(AV[1]) == "NG_R1"
+
+. assert strtrim(AV[3]) == "Non-BHCPF"
+
+. assert strtrim(AW[3]) == "BHCPF"
+
+. generate long source_row = _n
+
+. quietly count if strtrim(B) == "Sample"
+
+. assert r(N) == 1
+
+. quietly summarize source_row if strtrim(B) == "Sample", meanonly
+
+. local sample_row = r(min)
+
+. local sample1 = real(AV[`sample_row'])
+
+. local sample2 = real(AW[`sample_row'])
+
+. generate byte indicator_id = .
+(38 missing values generated)
+
+. replace indicator_id = 1 if strtrim(C) == "SUP_05AAA_*"
+(1 real change made)
+
+. replace indicator_id = 2 if strtrim(C) == "INF_04"
+(1 real change made)
+
+. replace indicator_id = 3 if strtrim(C) == "INF_05"
+(1 real change made)
+
+. keep if !missing(indicator_id)
+(35 observations deleted)
+
+. assert _N == 3
+
+. isid indicator_id
+
+. keep indicator_id AV AW
+
+. rename (AV AW) (value1 value2)
+
+. reshape long value, i(indicator_id) j(group_id)
+(j = 1 2)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations                3   ->   6           
+Number of variables                   3   ->   3           
+j variable (2 values)                     ->   group_id
+xij variables:
+                          value1 value2   ->   value
+-----------------------------------------------------------------------------
+
+. rename value availability_pct
+
+. destring availability_pct, replace
+availability_pct: all characters numeric; replaced as double
+
+. generate str12 programme_group = cond(group_id == 1, "Non-BHCPF", "BHCPF")
+
+. generate long survey_sample_n = cond(group_id == 1, `sample1', `sample2')
+
+. assert _N == 6
+
+. isid indicator_id programme_group
+
+. assert !missing(availability_pct, survey_sample_n)
+
+. assert inrange(availability_pct, 0, 100)
+
+. assert survey_sample_n > 0 & survey_sample_n == floor(survey_sample_n)
+
+. bysort indicator_id: egen total_sample = total(survey_sample_n)
+
+. assert total_sample == scalar(national_sample)
+
+. drop total_sample
+
+. merge m:1 indicator_id using `national', ///
+>     keepusing(indicator_code indicator_label source_indicator country_round survey_period) ///
+>     assert(match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 6  
+    -----------------------------------------
+
+. format availability_pct %9.2f
+
+. sort indicator_id group_id
+
+. save `programme'
+file C:\Users\nwoke\AppData\Local\Temp\ST_74c4_000003.tmp saved as .dta format
+
+. save "outputs/readiness_programme_summary.dta", replace
+(file outputs/readiness_programme_summary.dta not found)
+file outputs/readiness_programme_summary.dta saved
+
+. export delimited using "outputs/readiness_programme_table.csv", replace
+(file outputs/readiness_programme_table.csv not found)
+file outputs/readiness_programme_table.csv saved
+
+. 
+. forvalues k = 1/3 {
+  2.     preserve
+  3.     keep if indicator_id == `k'
+  4.     local label = indicator_label[1]
+  5.     graph hbar (asis) availability_pct, ///
+>         over(programme_group, sort(1) descending) ///
+>         blabel(bar, format(%4.2f)) ylabel(0(20)100) ///
+>         ytitle("Published indicator value (%)") ///
+>         title("Nigeria: `label' by programme group", size(medsmall)) ///
+>         note("Source: GFF FASTR published summaries, Nigeria Round 1." ///
+>              "Descriptive comparison; does not establish programme effects.")
+  6.     graph export "outputs/readiness_programme_indicator`k'.png", width(1800) replace
+  7.     graph save "outputs/readiness_programme_indicator`k'.gph", replace
+  8.     restore
+  9. }
+(4 observations deleted)
+(file outputs/readiness_programme_indicator1.png not found)
+file outputs/readiness_programme_indicator1.png saved as PNG format
+(file outputs/readiness_programme_indicator1.gph not found)
+file outputs/readiness_programme_indicator1.gph saved
+(4 observations deleted)
+(file outputs/readiness_programme_indicator2.png not found)
+file outputs/readiness_programme_indicator2.png saved as PNG format
+(file outputs/readiness_programme_indicator2.gph not found)
+file outputs/readiness_programme_indicator2.gph saved
+(4 observations deleted)
+(file outputs/readiness_programme_indicator3.png not found)
+file outputs/readiness_programme_indicator3.png saved as PNG format
+(file outputs/readiness_programme_indicator3.gph not found)
+file outputs/readiness_programme_indicator3.gph saved
+
+. 
+. * ---------- Full-precision gaps for each indicator ----------
+. use `programme', clear
+
+. keep indicator_id indicator_code indicator_label group_id availability_pct
+
+. reshape wide availability_pct, i(indicator_id indicator_code indicator_label) j(group_id)
+(j = 1 2)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                6   ->   3           
+Number of variables                   5   ->   5           
+j variable (2 values)          group_id   ->   (dropped)
+xij variables:
+                       availability_pct   ->   availability_pct1 availability_pct2
+-----------------------------------------------------------------------------
+
+. generate double bhcpf_minus_nonbhcpf_pp = availability_pct2 - availability_pct1
+
+. rename availability_pct1 nonbhcpf_pct
+
+. rename availability_pct2 bhcpf_pct
+
+. tempfile pgaps
+
+. save `pgaps'
+file C:\Users\nwoke\AppData\Local\Temp\ST_74c4_00000a.tmp saved as .dta format
+
+. 
+. use `zones', clear
+
+. bysort indicator_id: egen double zone_max_pct = max(availability_pct)
+
+. bysort indicator_id: egen double zone_min_pct = min(availability_pct)
+
+. generate double highest_minus_lowest_zone_pp = zone_max_pct - zone_min_pct
+
+. keep indicator_id zone_max_pct zone_min_pct highest_minus_lowest_zone_pp
+
+. bysort indicator_id: keep if _n == 1
+(15 observations deleted)
+
+. merge 1:1 indicator_id using `pgaps', assert(match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 3  
+    -----------------------------------------
+
+. format *_pct *_pp %9.2f
+
+. sort indicator_id
+
+. save "outputs/readiness_comparison_gaps.dta", replace
+(file outputs/readiness_comparison_gaps.dta not found)
+file outputs/readiness_comparison_gaps.dta saved
+
+. export delimited using "outputs/readiness_comparison_gaps.csv", replace
+(file outputs/readiness_comparison_gaps.csv not found)
+file outputs/readiness_comparison_gaps.csv saved
+
+. list indicator_label bhcpf_minus_nonbhcpf_pp highest_minus_lowest_zone_pp, noobs
+
+  +-------------------------------------------------------------+
+  |                       indicator_label   bhcpf_~p   highes~p |
+  |-------------------------------------------------------------|
+  |      Average key vaccine availability      15.13      12.75 |
+  |            Primary electricity source      37.99      27.83 |
+  | Continuous electricity in past 7 days      17.93      14.09 |
+  +-------------------------------------------------------------+
+
+. 
+. * ---------- Record only checks actually implemented ----------
+. file open checks using "outputs/readiness_extraction_checks.txt", write text replace
+(file outputs/readiness_extraction_checks.txt not found)
+
+. file write checks "Nigeria Round 1: vaccine and electricity summary extraction" _n
+
+. file write checks "Country-round, survey period and subgroup header checks passed." _n
+
+. file write checks "Exactly three unique selected indicators found in each source sheet." _n
+
+. file write checks "Expected national/zone/programme row counts: 3/18/6; unique keys passed." _n
+
+. file write checks "Nonmissing numeric values, 0-100 ranges and positive integer survey samples passed." _n
+
+. file write checks "Zone and programme survey samples each reconcile to 3,989 per indicator." _n
+
+. file write checks "Survey samples are not confirmed indicator denominators." _n
+
+. file write checks "No combined readiness score, correlation, regression, causal analysis or HMIS linkage." _n
+
+. file write checks "Electricity measures do not establish cold-chain functionality." _n
+
+. file write checks "Separate summaries do not identify facilities with overlapping gaps." _n
+
+. file close checks
+
+. display "Completed: expanded tables/datasets, gap table, seven charts, checks and log."
+Completed: expanded tables/datasets, gap table, seven charts, checks and log.
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\nwoke\OneDrive\Documents\FASTR_Nigeria\outputs/FASTR_Nigeria_expanded.log
+  log type:  text
+ closed on:  13 Oct 2026, 21:15:04
+----------------------------------------------------------------------------------------------------------------------------------------
